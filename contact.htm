@@ -72,7 +72,11 @@
       padding: 15px; border-radius: 6px; width: 100%; font-size: 1.1rem;
       cursor: pointer; transition: background 0.3s ease;
     }
-    button:hover { background: #900000; }
+    button:hover:not(:disabled) { background: #900000; }
+    button:disabled {
+      background: #cc6666;
+      cursor: not-allowed;
+    }
 
     /* Messages */
     .error, .success { font-weight: 600; margin-bottom: 20px; text-align: center; }
@@ -115,15 +119,15 @@
       <div class="success" id="contactSuccess" style="display:none;"></div>
 
       <label for="name">Your Name*</label>
-      <input type="text" id="name" name="name" placeholder="Your full name" required minlength="3" />
+      <input type="text" id="name" name="name" aria-label="Your Name" placeholder="Your full name" required minlength="3" />
 
       <label for="email">Your Email*</label>
-      <input type="email" id="email" name="email" placeholder="you@example.com" required />
+      <input type="email" id="email" name="email" aria-label="Your Email" placeholder="you@example.com" required />
 
       <label for="message">Message*</label>
-      <textarea id="message" name="message" placeholder="Write your message here..." required minlength="10"></textarea>
+      <textarea id="message" name="message" aria-label="Message" placeholder="Write your message here..." required minlength="10"></textarea>
 
-      <button type="submit">Send Message</button>
+      <button type="submit" id="submitBtn">Send Message</button>
     </form>
   </div>
 </main>
@@ -136,6 +140,7 @@
   const contactForm = document.getElementById('contactForm');
   const contactError = document.getElementById('contactError');
   const contactSuccess = document.getElementById('contactSuccess');
+  const submitBtn = document.getElementById('submitBtn');
 
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -148,11 +153,24 @@
       return;
     }
 
+    // Simple email regex for extra validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const emailValue = contactForm.email.value.trim();
+    if (!emailPattern.test(emailValue)) {
+      contactError.textContent = 'Please enter a valid email address.';
+      contactError.style.display = 'block';
+      return;
+    }
+
     const formData = {
       name: contactForm.name.value.trim(),
-      email: contactForm.email.value.trim(),
+      email: emailValue,
       message: contactForm.message.value.trim()
     };
+
+    // Disable button and show loading text
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
 
     try {
       const response = await fetch('/api/contact', {
@@ -175,6 +193,9 @@
       contactError.textContent = 'Network error: Could not send your message.';
       contactError.style.display = 'block';
       console.error('Contact form error:', error);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Message';
     }
   });
 </script>

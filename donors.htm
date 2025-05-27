@@ -5,9 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Donor Database - Raktabeej</title>
   <style>
-    /* Reset & Base */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body, html { background: #f9f9f9; color: #333; }
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body, html {
+      background: #f9f9f9; color: #333;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 60px; /* To prevent footer overlap */
+    }
 
     /* Header */
     header {
@@ -47,15 +54,14 @@
       font-weight: bold;
     }
 
-    /* Filter Bar */
+    /* Filters */
     .filters {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
       margin-bottom: 25px;
     }
-    .filters input,
-    .filters select {
+    .filters input, .filters select {
       padding: 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -63,14 +69,13 @@
       transition: border-color 0.3s ease;
       width: 100%;
     }
-    .filters input:focus,
-    .filters select:focus {
+    .filters input:focus, .filters select:focus {
       border-color: #b30000;
       outline: none;
       box-shadow: 0 0 5px rgba(179,0,0,0.3);
     }
 
-    /* Table Styles */
+    /* Table */
     .table-wrapper {
       overflow-x: auto;
       background: white;
@@ -93,10 +98,9 @@
       font-size: 0.95rem;
     }
     tbody tr:hover {
-      background: #ffe6e6;
+      background: #fff2f2;
     }
 
-    /* Badge */
     .blood-badge {
       background: #b30000;
       color: white;
@@ -106,7 +110,6 @@
       font-weight: 600;
     }
 
-    /* No Results */
     #noResults {
       text-align: center;
       color: #666;
@@ -114,14 +117,14 @@
       font-size: 1.1rem;
     }
 
-    /* Footer */
     footer {
       text-align: center;
       padding: 15px 0;
       background: white;
       border-top: 2px solid #b30000;
-      position: fixed;
+      position: absolute;
       bottom: 0;
+      left: 0;
       width: 100%;
       font-size: 0.9rem;
     }
@@ -129,14 +132,14 @@
     @media (max-width: 768px) {
       header img { height: 50px; }
       th, td { padding: 10px 12px; font-size: 0.85rem; }
-      table { min-width: auto; }
+      table { min-width: 100%; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <img src="assets/logo.png" alt="Raktabeej Logo" />
+  <img src="assets/logo.png" alt="Raktabeej Logo - Together we save lives" />
   <nav>
     <a href="index.htm">Home</a>
     <a href="about.htm">About</a>
@@ -200,7 +203,7 @@
         donors = await res.json();
         renderTable(donors);
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching donors:', err);
       }
     }
 
@@ -214,10 +217,10 @@
       list.forEach(d => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${d.name}</td>
-          <td><span class="blood-badge">${d.bloodGroup}</span></td>
-          <td><a href="tel:${d.phone}" style="color:#b30000;">${d.phone}</a></td>
-          <td><a href="mailto:${d.email || '#'}" style="color:#b30000;">${d.email || 'N/A'}</a></td>
+          <td>${d.name || 'N/A'}</td>
+          <td><span class="blood-badge">${d.bloodGroup || 'N/A'}</span></td>
+          <td><a href="tel:${d.phone}" style="color:#b30000;">${d.phone || 'N/A'}</a></td>
+          <td><a href="mailto:${d.email}" style="color:#b30000;">${d.email || 'N/A'}</a></td>
           <td>${d.address || 'N/A'}</td>
           <td>${d.lastDonationDate ? new Date(d.lastDonationDate).toLocaleDateString() : 'N/A'}</td>
         `;

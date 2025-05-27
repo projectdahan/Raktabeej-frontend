@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Register as Donor - Raktabeej</title>
   <style>
-    /* Base Reset */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body, html { background: #f9f9f9; color: #333; min-height: 100vh; }
 
-    /* Header */
     header {
       background: white;
       border-bottom: 2px solid #b30000;
@@ -36,7 +34,6 @@
       border-radius: 4px;
     }
 
-    /* Main Content */
     main { padding: 100px 0 60px; }
     .container {
       max-width: 600px;
@@ -54,7 +51,6 @@
       font-weight: bold;
     }
 
-    /* Form Elements */
     label { display: block; margin-bottom: 6px; font-weight: 600; }
     input, select {
       width: 100%; padding: 12px; margin-bottom: 20px;
@@ -66,7 +62,6 @@
     }
     input[type="checkbox"] { width: auto; margin-right: 8px; }
 
-    /* Button */
     button {
       background: #b30000; color: white; font-weight: bold; border: none;
       padding: 15px; border-radius: 6px; width: 100%; font-size: 1.1rem;
@@ -74,12 +69,10 @@
     }
     button:hover { background: #900000; }
 
-    /* Error/Success */
     .error, .success { font-weight: 600; margin-bottom: 20px; text-align: center; }
     .error { color: #d00000; }
     .success { color: #078000; }
 
-    /* Footer */
     footer {
       background: white; border-top: 2px solid #b30000;
       text-align: center; padding: 12px 0;
@@ -112,9 +105,10 @@
     <h2>Register as Blood Donor</h2>
     <form id="donorForm" novalidate>
       <div class="error" id="formError" style="display:none;"></div>
+      <div class="success" id="formSuccess" style="display:none;"></div>
 
       <label for="name">Full Name*</label>
-      <input type="text" id="name" name="name" placeholder="Your full name" required minlength="3" />
+      <input type="text" id="name" name="name" placeholder="Your full name" required minlength="3" autocomplete="name" />
 
       <label for="bloodGroup">Blood Group*</label>
       <select id="bloodGroup" name="bloodGroup" required>
@@ -124,13 +118,13 @@
       </select>
 
       <label for="address">Address (City/Area)*</label>
-      <input type="text" id="address" name="address" placeholder="E.g., Kathmandu" required minlength="2" />
+      <input type="text" id="address" name="address" placeholder="E.g., Kathmandu" required minlength="2" autocomplete="address-level2" />
 
       <label for="phone">Phone Number*</label>
-      <input type="tel" id="phone" name="phone" placeholder="+977XXXXXXXXXX" required pattern="^\+977\d{8,10}$" />
+      <input type="tel" id="phone" name="phone" placeholder="+97798XXXXXXXX" required pattern="^\+977(?:98\d{8}|1\d{7})$" autocomplete="tel" />
 
       <label for="email">Email Address*</label>
-      <input type="email" id="email" name="email" placeholder="you@example.com" required />
+      <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" />
 
       <label>
         <input type="checkbox" id="consent" name="consent" required />
@@ -152,10 +146,12 @@
 <script>
   const form = document.getElementById('donorForm');
   const formError = document.getElementById('formError');
+  const formSuccess = document.getElementById('formSuccess');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     formError.style.display = 'none';
+    formSuccess.style.display = 'none';
 
     if (!form.checkValidity()) {
       formError.textContent = 'Please fill all fields correctly and provide consent.';
@@ -178,11 +174,14 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(donorData)
       });
+
       if (!response.ok) {
         const errData = await response.json();
         throw new Error(errData.error || 'Registration failed');
       }
-      alert('Thank you for registering as a donor!');
+
+      formSuccess.textContent = 'Thank you for registering as a donor!';
+      formSuccess.style.display = 'block';
       form.reset();
     } catch (err) {
       formError.textContent = err.message;
@@ -190,5 +189,6 @@
     }
   });
 </script>
+
 </body>
 </html>
