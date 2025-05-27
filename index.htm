@@ -11,27 +11,30 @@
       box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
+    
     body, html {
       height: 100%;
       overflow-x: hidden;
       background: #000;
     }
 
+    /* HEADER */
     header {
       position: fixed;
       top: 0;
       width: 100%;
       background: rgba(0,0,0,0.7);
       color: white;
-      padding: 10px 20px;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       z-index: 1000;
       box-shadow: 0 2px 6px rgba(0,0,0,0.8);
     }
+    
     header img {
-      height: 50px;
+      height: 45px;
     }
 
     nav {
@@ -39,6 +42,7 @@
       gap: 20px;
       align-items: center;
     }
+
     nav a {
       color: white;
       text-decoration: none;
@@ -46,17 +50,20 @@
       transition: color 0.3s ease;
       font-size: 1rem;
     }
+
     nav a:hover {
       color: #ff3b3b;
     }
 
     .hamburger {
       display: none;
-      font-size: 1.8rem;
+      font-size: 2rem;
       cursor: pointer;
       user-select: none;
+      padding: 5px;
     }
 
+    /* VIDEO BACKGROUND */
     .video-bg {
       position: fixed;
       top: 0;
@@ -68,9 +75,10 @@
       filter: brightness(0.6);
     }
 
+    /* MAIN CONTENT */
     main {
       min-height: 100vh;
-      padding: 80px 20px 60px; /* leave space for fixed header and footer */
+      padding: 90px 20px 70px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -80,19 +88,19 @@
     }
 
     main img.logo-main {
-      max-width: 280px;
+      max-width: 260px;
       width: 90%;
       height: auto;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       user-select: none;
     }
 
     .btn-group {
-      margin-top: 10px;
+      margin-top: 12px;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
+      gap: 12px;
       width: 100%;
       max-width: 400px;
     }
@@ -102,7 +110,7 @@
       text-decoration: none;
       color: white;
       background: #ff0000;
-      padding: 14px 20px;
+      padding: 12px 18px;
       border-radius: 6px;
       font-weight: bold;
       box-shadow: 0 4px 8px rgba(255, 0, 0, 0.6);
@@ -116,9 +124,10 @@
       background: #cc0000;
     }
 
+    /* FOOTER */
     footer {
       position: fixed;
-      bottom: 10px;
+      bottom: 12px;
       width: 100%;
       text-align: center;
       color: white;
@@ -128,7 +137,7 @@
       user-select: none;
     }
 
-    /* Responsive Styles */
+    /* RESPONSIVE DESIGN */
     @media (max-width: 768px) {
       .video-bg {
         display: none;
@@ -136,15 +145,15 @@
 
       nav {
         position: fixed;
-        top: 60px;
+        top: 55px;
         right: 0;
         background: rgba(0, 0, 0, 0.9);
         flex-direction: column;
         gap: 15px;
-        padding: 20px;
+        padding: 18px;
         border-radius: 0 0 0 8px;
-        width: 200px;
-        height: calc(100vh - 60px);
+        width: 220px;
+        height: calc(100vh - 55px);
         transform: translateX(100%);
         transition: transform 0.3s ease;
         box-shadow: -3px 0 10px rgba(0,0,0,0.7);
@@ -156,8 +165,8 @@
       }
 
       nav a {
-        font-size: 1.1rem;
-        padding: 8px 0;
+        font-size: 1.2rem;
+        padding: 10px 0;
       }
 
       .hamburger {
@@ -166,7 +175,7 @@
       }
 
       main {
-        padding: 80px 15px 70px;
+        padding: 85px 15px 75px;
       }
 
       .btn-group a {
@@ -211,6 +220,7 @@
   function toggleMenu() {
     document.getElementById('nav-menu').classList.toggle('active');
   }
+
   // Close menu when clicking a link (optional)
   document.querySelectorAll('#nav-menu a').forEach(link => {
     link.addEventListener('click', () => {
