@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Raktabeej - Blood Donation Network</title>
   <style>
     * {
@@ -14,6 +14,7 @@
     
     body, html {
       height: 100%;
+      width: 100%;
       overflow-x: hidden;
       background: #000;
     }
@@ -64,14 +65,21 @@
     }
 
     /* VIDEO BACKGROUND */
-    .video-bg {
+    .video-bg-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      overflow: hidden;
       z-index: -1;
+      background: #000;
+    }
+
+    .video-bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       filter: brightness(0.6);
     }
 
@@ -139,8 +147,8 @@
 
     /* RESPONSIVE DESIGN */
     @media (max-width: 768px) {
-      .video-bg {
-        display: none;
+      .video-bg-container {
+        display: none; /* Hide video for mobile */
       }
 
       nav {
@@ -199,10 +207,12 @@
   </nav>
 </header>
 
-<video class="video-bg" autoplay muted loop playsinline>
-  <source src="assets/background.mp4" type="video/mp4" />
-  Your browser does not support the video tag.
-</video>
+<div class="video-bg-container">
+  <video class="video-bg" autoplay muted loop playsinline>
+    <source src="assets/background.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 <main>
   <img class="logo-main" src="assets/logo.png" alt="Raktabeej Logo" />
@@ -221,11 +231,19 @@
     document.getElementById('nav-menu').classList.toggle('active');
   }
 
-  // Close menu when clicking a link (optional)
+  // Close menu when clicking a link
   document.querySelectorAll('#nav-menu a').forEach(link => {
     link.addEventListener('click', () => {
       document.getElementById('nav-menu').classList.remove('active');
     });
+  });
+
+  // Force video playback for mobile Chrome
+  document.addEventListener('DOMContentLoaded', () => {
+    const video = document.querySelector('.video-bg');
+    if (video) {
+      video.play().catch(() => console.log("Autoplay blocked"));
+    }
   });
 </script>
 
