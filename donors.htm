@@ -110,11 +110,15 @@
       font-weight: 600;
     }
 
-    #noResults {
+    #noResults, #loading, #errorMsg {
       text-align: center;
       color: #666;
       margin-top: 25px;
       font-size: 1.1rem;
+    }
+
+    #errorMsg {
+      color: #b30000;
     }
 
     footer {
@@ -155,32 +159,34 @@
     <h1>Blood Donor Database</h1>
 
     <div class="filters">
-      <input id="filterName" type="text" placeholder="Search by name..." />
-      <select id="filterGroup">
+      <input id="filterName" type="text" placeholder="Search by name..." aria-label="Search donors by name" />
+      <select id="filterGroup" aria-label="Filter donors by blood group">
         <option value="">All Blood Groups</option>
         <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
         <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
       </select>
-      <input id="filterAddress" type="text" placeholder="Search by address..." />
+      <input id="filterAddress" type="text" placeholder="Search by address..." aria-label="Search donors by address" />
     </div>
 
-    <div class="table-wrapper">
+    <div class="table-wrapper" role="region" aria-live="polite" aria-label="Donor list">
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Blood Group</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Last Donation</th>
+            <th scope="col">Name</th>
+            <th scope="col">Blood Group</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Email</th>
+            <th scope="col">Address</th>
+            <th scope="col">Last Donation</th>
           </tr>
         </thead>
         <tbody id="donorTbody"></tbody>
       </table>
     </div>
 
+    <p id="loading">Loading donors...</p>
     <p id="noResults" style="display:none;">No donors found.</p>
+    <p id="errorMsg" style="display:none;">Failed to load donors. Please try again later.</p>
   </div>
 </main>
 
@@ -192,18 +198,27 @@
   document.addEventListener('DOMContentLoaded', () => {
     const tbody = document.getElementById('donorTbody');
     const noResults = document.getElementById('noResults');
+    const loading = document.getElementById('loading');
+    const errorMsg = document.getElementById('errorMsg');
     const filterName = document.getElementById('filterName');
     const filterGroup = document.getElementById('filterGroup');
     const filterAddress = document.getElementById('filterAddress');
     let donors = [];
 
     async function fetchDonors() {
+      loading.style.display = 'block';
+      errorMsg.style.display = 'none';
+      noResults.style.display = 'none';
       try {
-        const res = await fetch('/api/donors');
+        const res = await fetch('https://raktabeej.onrender.com/api/donors');
+        if (!res.ok) throw new Error(`Status: ${res.status}`);
         donors = await res.json();
         renderTable(donors);
       } catch (err) {
         console.error('Error fetching donors:', err);
+        errorMsg.style.display = 'block';
+      } finally {
+        loading.style.display = 'none';
       }
     }
 
@@ -219,8 +234,8 @@
         tr.innerHTML = `
           <td>${d.name || 'N/A'}</td>
           <td><span class="blood-badge">${d.bloodGroup || 'N/A'}</span></td>
-          <td><a href="tel:${d.phone}" style="color:#b30000;">${d.phone || 'N/A'}</a></td>
-          <td><a href="mailto:${d.email}" style="color:#b30000;">${d.email || 'N/A'}</a></td>
+          <td><a href="tel:${d.phone}" style="color:#b30000;" aria-label="Call ${d.name}">${d.phone || 'N/A'}</a></td>
+          <td><a href="mailto:${d.email}" style="color:#b30000;" aria-label="Email ${d.name}">${d.email || 'N/A'}</a></td>
           <td>${d.address || 'N/A'}</td>
           <td>${d.lastDonationDate ? new Date(d.lastDonationDate).toLocaleDateString() : 'N/A'}</td>
         `;
@@ -248,5 +263,6 @@
     fetchDonors();
   });
 </script>
+
 </body>
 </html>
