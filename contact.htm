@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us - Raktabeej</title>
+  <style>
+    /* Reset & Base */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; min-height: 100vh; }
+
+    /* Header */
+    header {
+      background: white;
+      border-bottom: 2px solid #b30000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header img { height: 80px; }
+    nav a {
+      color: #b30000;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 6px 8px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover, nav a.active {
+      background: #b30000;
+      color: white;
+      border-radius: 4px;
+    }
+
+    /* Main Content */
+    main { padding: 100px 0 60px; }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+    h2 {
+      text-align: center;
+      color: #b30000;
+      margin-bottom: 25px;
+      font-size: 1.75rem;
+      font-weight: bold;
+    }
+
+    /* Form Styles */
+    label { display: block; margin-bottom: 6px; font-weight: 600; }
+    input, textarea {
+      width: 100%; padding: 12px; margin-bottom: 20px;
+      border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    input:focus, textarea:focus {
+      outline: none; border-color: #b30000; box-shadow: 0 0 5px rgba(179,0,0,0.3);
+    }
+    textarea { resize: vertical; min-height: 100px; }
+
+    /* Button */
+    button {
+      background: #b30000; color: white; font-weight: bold; border: none;
+      padding: 15px; border-radius: 6px; width: 100%; font-size: 1.1rem;
+      cursor: pointer; transition: background 0.3s ease;
+    }
+    button:hover { background: #900000; }
+
+    /* Messages */
+    .error, .success { font-weight: 600; margin-bottom: 20px; text-align: center; }
+    .error { color: #d00000; }
+    .success { color: #078000; }
+
+    /* Footer */
+    footer {
+      background: white; border-top: 2px solid #b30000;
+      text-align: center; padding: 12px 0;
+      position: fixed; bottom: 0; width: 100%; font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      header img { height: 60px; }
+      .container { padding: 20px; margin: 80px 10px 60px; }
+      h2 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="assets/logo.png" alt="Raktabeej Logo" />
+  <nav>
+    <a href="index.htm">Home</a>
+    <a href="about.htm">About</a>
+    <a href="donors.htm">Donors</a>
+    <a href="register.htm">Register</a>
+    <a href="request.htm">Request</a>
+    <a href="contact.htm" class="active">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <div class="container">
+    <h2>Contact Us</h2>
+    <form id="contactForm" novalidate>
+      <div class="error" id="contactError" style="display:none;"></div>
+      <div class="success" id="contactSuccess" style="display:none;"></div>
+
+      <label for="name">Your Name*</label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required minlength="3" />
+
+      <label for="email">Your Email*</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required />
+
+      <label for="message">Message*</label>
+      <textarea id="message" name="message" placeholder="Write your message here..." required minlength="10"></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Raktabeej — Together we save lives
+</footer>
+
+<script>
+  const contactForm = document.getElementById('contactForm');
+  const contactError = document.getElementById('contactError');
+  const contactSuccess = document.getElementById('contactSuccess');
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    contactError.style.display = 'none';
+    contactSuccess.style.display = 'none';
+
+    if (!contactForm.checkValidity()) {
+      contactError.textContent = 'Please fill all required fields correctly.';
+      contactError.style.display = 'block';
+      return;
+    }
+
+    const formData = {
+      name: contactForm.name.value.trim(),
+      email: contactForm.email.value.trim(),
+      message: contactForm.message.value.trim()
+    };
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        contactSuccess.textContent = data.message || 'Your message has been sent successfully. Thank you!';
+        contactSuccess.style.display = 'block';
+        contactForm.reset();
+      } else {
+        contactError.textContent = data.error || 'Something went wrong. Please try again later.';
+        contactError.style.display = 'block';
+      }
+    } catch (error) {
+      contactError.textContent = 'Network error: Could not send your message.';
+      contactError.style.display = 'block';
+      console.error('Contact form error:', error);
+    }
+  });
+</script>
+</body>
+</html>

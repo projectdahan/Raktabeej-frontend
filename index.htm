@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Raktabeej - Blood Donation Network</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  body, html { height: 100%; overflow-x: hidden; }
+  header {
+    position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.6);
+    color: white; padding: 15px 30px; display: flex; align-items: center; justify-content: space-between;
+    z-index: 10;
+    margin-bottom: 20px;
+  }
+  header img { height: 70px; }
+  nav a {
+    color: white; margin-left: 25px; text-decoration: none; font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  nav a:hover { color: #ff0000; }
+  .video-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;
+    filter: brightness(0.6);
+  }
+  main {
+    height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; color: white; padding: 0 20px;
+  }
+  main img.logo-main {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  .btn-group {
+    margin-top: 5px;
+  }
+  .btn-group a {
+    text-decoration: none; color: white; background: #ff0000;
+    padding: 15px 30px; margin: 10px; border-radius: 5px; font-weight: bold;
+    box-shadow: 0 4px 8px rgba(255,0,0,0.5);
+    transition: background 0.3s ease;
+  }
+  .btn-group a:hover {
+    background: #cc0000;
+  }
+  footer {
+    position: fixed; bottom: 10px; width: 100%; text-align: center; color: white;
+    font-size: 0.9rem; text-shadow: 1px 1px 3px black;
+  }
+  @media (max-width: 768px) {
+    .video-bg {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="assets/logo.png" alt="Raktabeej Logo" />
+  <nav>
+    <a href="register.htm">Register as Donor</a>
+    <a href="about.htm" class="active">About Us</a>
+    <a href="donors.htm">Donor Database</a>
+    <a href="request.htm">Request Blood</a>
+    <a href="contact.htm">Contact</a>
+  </nav>
+</header>
+
+<video class="video-bg" autoplay muted loop playsinline>
+  <source src="assets/background.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
+<main>
+  <img class="logo-main" src="assets/logo.png" alt="Raktabeej Logo" />
+  <div class="btn-group">
+    <a href="register.htm">Become a Donor</a>
+    <a href="donors.htm">Find Donors</a>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Raktabeej — Together we save lives
+</footer>
+
+</body>
+</html>

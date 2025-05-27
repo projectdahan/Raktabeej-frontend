@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register as Donor - Raktabeej</title>
+  <style>
+    /* Base Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body, html { background: #f9f9f9; color: #333; min-height: 100vh; }
+
+    /* Header */
+    header {
+      background: white;
+      border-bottom: 2px solid #b30000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header img { height: 80px; }
+    nav a {
+      color: #b30000;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 6px 8px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover, nav a.active {
+      background: #b30000;
+      color: white;
+      border-radius: 4px;
+    }
+
+    /* Main Content */
+    main { padding: 100px 0 60px; }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+    h2 {
+      text-align: center;
+      color: #b30000;
+      margin-bottom: 25px;
+      font-size: 1.75rem;
+      font-weight: bold;
+    }
+
+    /* Form Elements */
+    label { display: block; margin-bottom: 6px; font-weight: 600; }
+    input, select {
+      width: 100%; padding: 12px; margin-bottom: 20px;
+      border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    input:focus, select:focus {
+      outline: none; border-color: #b30000; box-shadow: 0 0 5px rgba(179,0,0,0.3);
+    }
+    input[type="checkbox"] { width: auto; margin-right: 8px; }
+
+    /* Button */
+    button {
+      background: #b30000; color: white; font-weight: bold; border: none;
+      padding: 15px; border-radius: 6px; width: 100%; font-size: 1.1rem;
+      cursor: pointer; transition: background 0.3s ease;
+    }
+    button:hover { background: #900000; }
+
+    /* Error/Success */
+    .error, .success { font-weight: 600; margin-bottom: 20px; text-align: center; }
+    .error { color: #d00000; }
+    .success { color: #078000; }
+
+    /* Footer */
+    footer {
+      background: white; border-top: 2px solid #b30000;
+      text-align: center; padding: 12px 0;
+      position: fixed; bottom: 0; width: 100%; font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      header img { height: 60px; }
+      .container { padding: 20px; margin: 80px 10px 60px; }
+      h2 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="assets/logo.png" alt="Raktabeej Logo" />
+  <nav>
+    <a href="index.htm">Home</a>
+    <a href="about.htm">About</a>
+    <a href="donors.htm">Donors</a>
+    <a href="register.htm" class="active">Register</a>
+    <a href="request.htm">Request</a>
+    <a href="contact.htm">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <div class="container">
+    <h2>Register as Blood Donor</h2>
+    <form id="donorForm" novalidate>
+      <div class="error" id="formError" style="display:none;"></div>
+
+      <label for="name">Full Name*</label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required minlength="3" />
+
+      <label for="bloodGroup">Blood Group*</label>
+      <select id="bloodGroup" name="bloodGroup" required>
+        <option value="">-- Select Blood Group --</option>
+        <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+        <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+      </select>
+
+      <label for="address">Address (City/Area)*</label>
+      <input type="text" id="address" name="address" placeholder="E.g., Kathmandu" required minlength="2" />
+
+      <label for="phone">Phone Number*</label>
+      <input type="tel" id="phone" name="phone" placeholder="+977XXXXXXXXXX" required pattern="^\+977\d{8,10}$" />
+
+      <label for="email">Email Address*</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required />
+
+      <label>
+        <input type="checkbox" id="consent" name="consent" required />
+        I consent to share my contact details for blood donation purposes.
+      </label>
+      <p class="consent-text" style="font-size:0.9rem; color:#555; margin-top:-10px; margin-bottom:20px;">
+        By consenting, you agree to be contacted in emergencies and allow Raktabeej to share your information with those requesting blood donations.
+      </p>
+
+      <button type="submit">Register</button>
+    </form>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Raktabeej — Together we save lives
+</footer>
+
+<script>
+  const form = document.getElementById('donorForm');
+  const formError = document.getElementById('formError');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    formError.style.display = 'none';
+
+    if (!form.checkValidity()) {
+      formError.textContent = 'Please fill all fields correctly and provide consent.';
+      formError.style.display = 'block';
+      return;
+    }
+
+    const donorData = {
+      name: form.name.value.trim(),
+      bloodGroup: form.bloodGroup.value,
+      address: form.address.value.trim(),
+      phone: form.phone.value.trim(),
+      email: form.email.value.trim(),
+      consent: form.consent.checked,
+    };
+
+    try {
+      const response = await fetch('/api/donors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(donorData)
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Registration failed');
+      }
+      alert('Thank you for registering as a donor!');
+      form.reset();
+    } catch (err) {
+      formError.textContent = err.message;
+      formError.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

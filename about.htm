@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About Us - Raktabeej</title>
+  <style>
+    /* Reset & Base */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; min-height: 100vh; }
+
+    /* Header */
+    header {
+      background: white;
+      border-bottom: 2px solid #b30000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header img { height: 80px; }
+    nav a {
+      color: #b30000;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 6px 8px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover, nav a.active {
+      background: #b30000;
+      color: white;
+      border-radius: 4px;
+    }
+
+    /* Main Content */
+    main { padding: 100px 0 60px; }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 40px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+    h1 {
+      text-align: center;
+      color: #b30000;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+    h2 {
+      color: #b30000;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-size: 1.75rem;
+      font-weight: bold;
+    }
+    p {
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+    ul {
+      margin-left: 20px;
+      margin-bottom: 20px;
+    }
+    ul li {
+      margin-bottom: 10px;
+    }
+
+    /* Footer */
+    footer {
+      background: white;
+      border-top: 2px solid #b30000;
+      text-align: center;
+      padding: 12px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      header img { height: 60px; }
+      .container { padding: 20px; margin: 80px 10px 60px; }
+      h1 { font-size: 2rem; }
+      h2 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <img src="assets/logo.png" alt="Raktabeej Logo" />
+  <nav>
+    <a href="index.htm">Home</a>
+    <a href="about.htm" class="active">About</a>
+    <a href="donors.htm">Donors</a>
+    <a href="register.htm">Register</a>
+    <a href="request.htm">Request</a>
+    <a href="contact.htm">Contact</a>
+  </nav>
+</header>
+<main>
+  <div class="container">
+    <h1>About Raktabeej</h1>
+    <p><strong>Raktabeej</strong> is a dedicated platform launched in 2025 to bridge the gap between blood donors and those in need across medical colleges and affiliated institutions in Nepal. Our name, derived from Sanskrit meaning "seed of blood," embodies our mission: to sow the seeds of hope by connecting willing donors with patients in critical need.</p>
+
+    <h2>Our Vision</h2>
+    <p>To build a resilient, responsive, and reliable blood donation community where every drop counts and no one is left waiting for life-saving resources.</p>
+
+    <h2>Our Mission</h2>
+    <ul>
+      <li><strong>Accessibility:</strong> Maintain an up-to-date donor database accessible to hospitals and emergency services.</li>
+      <li><strong>Awareness:</strong> Educate and encourage medical students and institutional members about the importance of regular blood donation.</li>
+      <li><strong>Responsiveness:</strong> Provide a fast, user-friendly interface for locating donors by blood group, location, and availability.</li>
+      <li><strong>Community:</strong> Foster a culture of altruism and solidarity among future healthcare professionals.</li>
+    </ul>
+
+    <h2>Key Features</h2>
+    <ul>
+      <li><strong>Donor Registration:</strong> Simple, validated form capturing essential details and consent.</li>
+      <li><strong>Search & Filter:</strong> Interactive database allowing filtering by name, blood group, and location.</li>
+      <li><strong>Request Form:</strong> Streamlined process for submitting blood requests with patient details and urgency.</li>
+      <li><strong>Responsive Design:</strong> Mobile-friendly layout ensuring accessibility on any device.</li>
+      <li><strong>No Team Photos:</strong> Focused on content and information; visual consistency across pages.</li>
+    </ul>
+
+    <h2>How It Works</h2>
+    <ol>
+      <li>Donors register via the <a href="register.htm">Donor Registration</a> page, providing their blood group, contact, and location.</li>
+      <li>Banks and patients search donors on the <a href="donors.htm">Donor Database</a> page.</li>
+      <li>Blood is requested through the <a href="request.htm">Request Blood</a> form with patient specifics.</li>
+      <li>Relevant donors are notified and matched to requests efficiently.</li>
+    </ol>
+
+    <h2>Get Involved</h2>
+    <p>Join our community today! Whether you’re a student, faculty member, or institution, your participation can make a life-saving difference.</p>
+    <p>Visit our <a href="register.htm">Donor Registration</a> page to sign up, or <a href="contact.htm">Contact Us</a> for more information.</p>
+  </div>
+</main>
+<footer>
+  &copy; 2025 Raktabeej — Together we save lives
+</footer>
+</body>
+</html>

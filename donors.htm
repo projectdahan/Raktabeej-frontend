@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Donor Database - Raktabeej</title>
+  <style>
+    /* Reset & Base */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body, html { background: #f9f9f9; color: #333; }
+
+    /* Header */
+    header {
+      background: white;
+      border-bottom: 2px solid #b30000;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header img { height: 60px; }
+    nav a {
+      color: #b30000;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 5px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover, nav a.active {
+      background: #b30000;
+      color: white;
+      border-radius: 4px;
+    }
+
+    /* Main Container */
+    main { padding: 100px 0 60px; }
+    .container { max-width: 1000px; margin: auto; padding: 0 20px; }
+    h1 {
+      text-align: center;
+      color: #b30000;
+      margin-bottom: 30px;
+      font-size: 2.75rem;
+      font-weight: bold;
+    }
+
+    /* Filter Bar */
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .filters input,
+    .filters select {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      width: 100%;
+    }
+    .filters input:focus,
+    .filters select:focus {
+      border-color: #b30000;
+      outline: none;
+      box-shadow: 0 0 5px rgba(179,0,0,0.3);
+    }
+
+    /* Table Styles */
+    .table-wrapper {
+      overflow-x: auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+    thead {
+      background: #b30000;
+      color: white;
+    }
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95rem;
+    }
+    tbody tr:hover {
+      background: #ffe6e6;
+    }
+
+    /* Badge */
+    .blood-badge {
+      background: #b30000;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* No Results */
+    #noResults {
+      text-align: center;
+      color: #666;
+      margin-top: 25px;
+      font-size: 1.1rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 15px 0;
+      background: white;
+      border-top: 2px solid #b30000;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      header img { height: 50px; }
+      th, td { padding: 10px 12px; font-size: 0.85rem; }
+      table { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="assets/logo.png" alt="Raktabeej Logo" />
+  <nav>
+    <a href="index.htm">Home</a>
+    <a href="about.htm">About</a>
+    <a href="donors.htm" class="active">Donors</a>
+    <a href="register.htm">Register</a>
+    <a href="request.htm">Request</a>
+    <a href="contact.htm">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <div class="container">
+    <h1>Blood Donor Database</h1>
+
+    <div class="filters">
+      <input id="filterName" type="text" placeholder="Search by name..." />
+      <select id="filterGroup">
+        <option value="">All Blood Groups</option>
+        <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+        <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+      </select>
+      <input id="filterAddress" type="text" placeholder="Search by address..." />
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Blood Group</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Last Donation</th>
+          </tr>
+        </thead>
+        <tbody id="donorTbody"></tbody>
+      </table>
+    </div>
+
+    <p id="noResults" style="display:none;">No donors found.</p>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Raktabeej — Together we save lives
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tbody = document.getElementById('donorTbody');
+    const noResults = document.getElementById('noResults');
+    const filterName = document.getElementById('filterName');
+    const filterGroup = document.getElementById('filterGroup');
+    const filterAddress = document.getElementById('filterAddress');
+    let donors = [];
+
+    async function fetchDonors() {
+      try {
+        const res = await fetch('/api/donors');
+        donors = await res.json();
+        renderTable(donors);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderTable(list) {
+      tbody.innerHTML = '';
+      if (!list.length) {
+        noResults.style.display = 'block';
+        return;
+      }
+      noResults.style.display = 'none';
+      list.forEach(d => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${d.name}</td>
+          <td><span class="blood-badge">${d.bloodGroup}</span></td>
+          <td><a href="tel:${d.phone}" style="color:#b30000;">${d.phone}</a></td>
+          <td><a href="mailto:${d.email || '#'}" style="color:#b30000;">${d.email || 'N/A'}</a></td>
+          <td>${d.address || 'N/A'}</td>
+          <td>${d.lastDonationDate ? new Date(d.lastDonationDate).toLocaleDateString() : 'N/A'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function applyFilters() {
+      const nameVal = filterName.value.trim().toLowerCase();
+      const groupVal = filterGroup.value;
+      const addrVal = filterAddress.value.trim().toLowerCase();
+
+      const filtered = donors.filter(d => {
+        return (
+          d.name.toLowerCase().includes(nameVal) &&
+          (groupVal === '' || d.bloodGroup === groupVal) &&
+          (!addrVal || (d.address && d.address.toLowerCase().includes(addrVal)))
+        );
+      });
+      renderTable(filtered);
+    }
+
+    [filterName, filterGroup, filterAddress].forEach(el => el.addEventListener('input', applyFilters));
+
+    fetchDonors();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Request Blood - Raktabeej</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body, html { background: #f9f9f9; color: #333; min-height: 100vh; }
+
+    /* Header */
+    header {
+      background: white;
+      border-bottom: 2px solid #b30000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 15px 30px; position: sticky; top: 0; z-index: 100;
+    }
+    header img { height: 80px; }
+    nav a {
+      color: #b30000; margin-left: 20px; text-decoration: none;
+      font-weight: 600; padding: 6px 8px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    nav a:hover, nav a.active {
+      background: #b30000; color: white; border-radius: 4px;
+    }
+
+    /* Main Content */
+    main { padding: 100px 0 60px; }
+    .container {
+      max-width: 600px; margin: auto; background: white;
+      padding: 30px 25px; border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+    h2 { text-align: center; color: #b30000; margin-bottom: 25px; font-size: 1.75rem; }
+
+    /* Form Elements */
+    label { display: block; margin-bottom: 6px; font-weight: 600; }
+    input, select, textarea {
+      width: 100%; padding: 12px; margin-bottom: 20px;
+      border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: #b30000; box-shadow: 0 0 5px rgba(179,0,0,0.3);
+    }
+    textarea { resize: vertical; min-height: 100px; }
+
+    /* Button */
+    button {
+      background: #b30000; color: white; font-weight: bold; border: none;
+      padding: 15px; border-radius: 6px; width: 100%; font-size: 1.1rem;
+      cursor: pointer; transition: background 0.3s ease;
+    }
+    button:hover { background: #900000; }
+
+    /* Messages */
+    .error, .success { font-weight: 600; margin-bottom: 20px; text-align: center; }
+    .error { color: #d00000; }
+    .success { color: #078000; }
+
+    /* Footer */
+    footer {
+      background: white; border-top: 2px solid #b30000;
+      text-align: center; padding: 12px 0;
+      position: fixed; bottom: 0; width: 100%; font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      header img { height: 60px; }
+      .container { padding: 20px; margin: 80px 10px 60px; }
+      h2 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="assets/logo.png" alt="Raktabeej Logo" />
+  <nav>
+    <a href="index.htm">Home</a>
+    <a href="about.htm">About</a>
+    <a href="donors.htm">Donors</a>
+    <a href="register.htm">Register</a>
+    <a href="request.htm" class="active">Request</a>
+    <a href="contact.htm">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <div class="container">
+    <h2>Request Blood</h2>
+    <form id="requestForm" novalidate>
+      <div class="error" id="formError" style="display:none;"></div>
+      <div class="success" id="formSuccess" style="display:none;"></div>
+
+      <label for="patientName">Patient's Name*</label>
+      <input type="text" id="patientName" name="patientName" placeholder="Patient's full name" required minlength="3" />
+
+      <label for="bloodGroup">Required Blood Group*</label>
+      <select id="bloodGroup" name="bloodGroup" required>
+        <option value="">-- Select Blood Group --</option>
+        <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+        <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+      </select>
+
+      <label for="units">Units Required*</label>
+      <input type="number" id="units" name="units" min="1" max="10" placeholder="Number of units" required />
+
+      <label for="hospital">Hospital Name & Location*</label>
+      <input type="text" id="hospital" name="hospital" placeholder="Hospital name and location" required minlength="3" />
+
+      <label for="contactPhone">Your Contact Phone*</label>
+      <input type="tel" id="contactPhone" name="contactPhone" placeholder="+977XXXXXXXXXX" required pattern="^\+977\d{8,10}$" />
+
+      <label for="additionalInfo">Additional Information (optional)</label>
+      <textarea id="additionalInfo" name="additionalInfo" placeholder="Any extra details..."></textarea>
+
+      <button type="submit">Submit Request</button>
+    </form>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Raktabeej — Together we save lives
+</footer>
+
+<script>
+  const form = document.getElementById('requestForm');
+  const formError = document.getElementById('formError');
+  const formSuccess = document.getElementById('formSuccess');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    formError.style.display = 'none';
+    formSuccess.style.display = 'none';
+
+    if (!form.checkValidity()) {
+      formError.textContent = 'Please fill all required fields correctly.';
+      formError.style.display = 'block';
+      return;
+    }
+
+    // Collect form data
+    const data = {
+      patientName: form.patientName.value.trim(),
+      bloodGroup: form.bloodGroup.value,
+      units: parseInt(form.units.value, 10),
+      hospital: form.hospital.value.trim(),
+      contactPhone: form.contactPhone.value.trim(),
+      additionalInfo: form.additionalInfo.value.trim()
+    };
+
+    try {
+      const response = await fetch('/api/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        formSuccess.textContent = result.message || 'Request submitted successfully!';
+        formSuccess.style.display = 'block';
+        form.reset();
+      } else {
+        formError.textContent = result.error || 'Submission failed. Please try again.';
+        formError.style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Submission error:', err);
+      formError.textContent = 'Network error: could not submit request.';
+      formError.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>
